@@ -647,11 +647,15 @@ function usable(value) {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const server = app.listen(port, '127.0.0.1', () => {
+const host = process.env.HOST || '0.0.0.0';
+const server = app.listen(port, host, () => {
   const url = `http://127.0.0.1:${port}`;
   console.log(`Galla Bill ${url}`);
-  if (process.env.NO_BROWSER !== '1') {
-    spawn('cmd', ['/c', 'start', '', url], { detached: true, stdio: 'ignore' }).unref();
+  const openBrowser = process.platform === 'win32' && process.env.NO_BROWSER !== '1' && !process.env.RENDER;
+  if (openBrowser) {
+    const browser = spawn('cmd', ['/c', 'start', '', url], { detached: true, stdio: 'ignore' });
+    browser.on('error', () => {});
+    browser.unref();
   }
 });
 
