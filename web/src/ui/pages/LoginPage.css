@@ -1,0 +1,452 @@
+.galla-login {
+  --navy: #061d49;
+  --blue: #0757ed;
+  --ink: #10264b;
+  --muted: #65738e;
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(300px, 0.92fr) minmax(260px, 1.05fr) minmax(340px, 0.86fr);
+  overflow: hidden;
+  color: white;
+  background: radial-gradient(circle at 55% 40%, #1679ed 0, #073d91 34%, #061b43 76%);
+  font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+}
+
+.galla-login .hero {
+  min-height: 0;
+  padding: 28px 12px 78px 36px;
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.galla-login .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, rgba(0, 16, 51, 0.28), rgba(0, 69, 165, 0.18));
+  z-index: -1;
+}
+
+.galla-login .brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.galla-login .brand img {
+  width: min(140px, 22vw);
+  height: auto;
+  object-fit: contain;
+}
+
+.galla-login .brand-name {
+  border-left: 2px solid rgba(255, 255, 255, 0.8);
+  padding-left: 22px;
+  font-size: clamp(18px, 2vw, 30px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.galla-login .brand-name small {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  margin-top: 5px;
+}
+
+.galla-login .kicker {
+  color: #ffb21a;
+  letter-spacing: 0.28em;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.galla-login h1 {
+  font-size: clamp(32px, 3.6vw, 56px);
+  line-height: 1.02;
+  margin: 6px 0;
+  color: #fff;
+}
+
+.galla-login h1 span {
+  color: #ffb900;
+}
+
+.galla-login .lead {
+  font-size: clamp(16px, 1.6vw, 22px);
+  font-weight: 700;
+  margin: 6px 0 4px;
+}
+
+.galla-login .sublead {
+  font-size: clamp(14px, 1.3vw, 18px);
+  line-height: 1.5;
+  max-width: 610px;
+  margin: 0;
+}
+
+.galla-login .features {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  max-width: 460px;
+}
+
+.galla-login .feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  background: rgba(0, 28, 83, 0.34);
+}
+
+.galla-login .feature-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid #4989e8;
+  color: #ffc21a;
+}
+
+.galla-login .feature b {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.galla-login .feature span {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.galla-login .hero-visual {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 0 52px;
+}
+
+.galla-login .hero-visual img {
+  width: 118%;
+  max-width: none;
+  max-height: calc(100dvh - 150px);
+  height: auto;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  object-position: center bottom;
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent 0%, #000 12%, #000 100%),
+    linear-gradient(90deg, transparent 0%, #000 7%, #000 94%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, transparent 0%, #000 12%, #000 100%),
+    linear-gradient(90deg, transparent 0%, #000 7%, #000 94%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.galla-login .growth-arrow {
+  position: absolute;
+  left: 0;
+  top: 1%;
+  width: 86%;
+  height: 24%;
+  z-index: 2;
+  overflow: visible;
+  filter: drop-shadow(0 8px 10px rgba(0, 30, 90, 0.22));
+}
+
+.galla-login .login-side {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 16px 22px 78px;
+  overflow: hidden;
+  background: linear-gradient(130deg, rgba(205, 230, 255, 0.12), rgba(255, 255, 255, 0.28));
+}
+
+.galla-login .login-card {
+  width: min(100%, 420px);
+  max-height: calc(100dvh - 96px);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 24px;
+  padding: 22px 28px 18px;
+  box-shadow: 0 22px 55px rgba(0, 22, 70, 0.25);
+}
+
+.galla-login .user-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #0757ed;
+  color: white;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 8px;
+}
+
+.galla-login .login-card h2 {
+  text-align: center;
+  font-size: 28px;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+
+.galla-login .intro {
+  text-align: center;
+  color: var(--muted);
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.galla-login .field {
+  position: relative;
+  margin-top: 10px;
+}
+
+.galla-login .field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #65738e;
+  display: grid;
+}
+
+.galla-login input {
+  width: 100%;
+  height: 46px;
+  border: 1px solid #cbd8ee;
+  border-radius: 12px;
+  padding: 0 44px;
+  font-size: 16px;
+  outline: none;
+  color: #10264b;
+  background: #fff;
+}
+
+.galla-login input:focus {
+  border-color: #0757ed;
+  box-shadow: 0 0 0 3px rgba(7, 87, 237, 0.12);
+}
+
+.galla-login .toggle {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: none;
+  color: #65738e;
+  cursor: pointer;
+  display: grid;
+  padding: 0;
+}
+
+.galla-login .submit {
+  width: 100%;
+  height: 48px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 13px;
+  background: linear-gradient(100deg, #0872ff, #063dbb);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.galla-login .submit:hover {
+  filter: brightness(1.06);
+}
+
+.galla-login .submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.galla-login .forgot {
+  display: inline-block;
+  margin-top: 12px;
+  color: #0757ed;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-weight: 650;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.galla-login .product {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #dce5f2;
+  text-align: center;
+  color: #687994;
+  font-size: 14px;
+}
+
+.galla-login .product a {
+  color: #0757ed;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.galla-login .form-error {
+  margin-top: 14px;
+}
+
+.galla-login .bottom {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 66px;
+  background: linear-gradient(90deg, #f0f6ff, #d9eaff 58%, #082b70 58%);
+  color: #073d91;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 4vw;
+  font-weight: 700;
+}
+
+.galla-login .assurances {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.galla-login .assurances li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.galla-login .assurances svg {
+  color: #0757ed;
+}
+
+.galla-login .disclaimer {
+  color: #fff;
+  background: #082b70;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.galla-login .disclaimer strong {
+  color: #ffc000;
+}
+
+@media (max-width: 900px) {
+  .galla-login {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .galla-login .hero {
+    display: block;
+    padding: 16px 22px 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .galla-login .features,
+  .galla-login .hero-visual,
+  .galla-login .kicker {
+    display: none;
+  }
+
+  .galla-login .login-side {
+    padding: 8px 16px 74px;
+    background: transparent;
+  }
+
+  .galla-login .bottom {
+    flex-wrap: wrap;
+    justify-content: center;
+    background: #eaf2ff;
+  }
+}
+
+@media (max-width: 560px) {
+  .galla-login .hero {
+    padding: 28px 22px;
+  }
+
+  .galla-login .brand {
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .galla-login .brand img {
+    width: 112px;
+  }
+
+  .galla-login .brand-name {
+    font-size: 15px;
+    padding-left: 12px;
+  }
+
+  .galla-login .brand-name small {
+    font-size: 11px;
+  }
+
+  .galla-login .login-side {
+    padding: 8px 16px 28px;
+  }
+
+  .galla-login .login-card {
+    padding: 28px 20px;
+    border-radius: 22px;
+  }
+
+  .galla-login .login-card h2 {
+    font-size: 30px;
+  }
+
+  .galla-login .bottom {
+    font-size: 13px;
+    justify-content: center;
+  }
+
+  .galla-login .disclaimer {
+    text-align: center;
+  }
+}

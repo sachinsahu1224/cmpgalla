@@ -1,0 +1,343 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GstEnv {
+  SANDBOX
+  PRODUCTION
+}
+
+enum InvoiceStatus {
+  DRAFT
+  FINAL
+  CANCELLED
+}
+
+model Role {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  users UserRole[]
+
+  @@map("roles")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  companyId    Int
+  company      Company    @relation(fields: [companyId], references: [id])
+  fullName     String
+  username     String     @unique
+  passwordHash String
+  active       Boolean    @default(true)
+  roles        UserRole[]
+  auditLogs    AuditLog[]
+  createdAt    DateTime   @default(now())
+
+  @@index([companyId])
+  @@map("users")
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model Company {
+  id              Int           @id @default(autoincrement())
+  legalName       String
+  tradeName       String
+  gstin           String
+  pan             String?
+  address         String
+  city            String
+  pincode         String
+  stateName       String
+  stateCode       String
+  phone           String?
+  email           String?
+  bankName        String?
+  accountNo       String?
+  ifsc            String?
+  branch          String?
+  gstEnv          GstEnv        @default(SANDBOX)
+  irpClientId     String?
+  irpClientSecret String?
+  irpUsername     String?
+  irpPassword     String?
+  irpPublicKey    String?       @db.Text
+  ewbClientId     String?
+  ewbClientSecret String?
+  ewbUsername     String?
+  ewbPassword     String?
+  ewbPublicKey    String?       @db.Text
+  integrationMode String        @default("MOCK")
+  shortageMode    String        @default("QUANTITY")
+  bardanaMode     String        @default("NONE")
+  bardanaRate     Decimal       @default(0) @db.Decimal(18, 2)
+  users           User[]
+  customers       Customer[]
+  products        Product[]
+  hsnCodes        HsnCode[]
+  transporters    Transporter[]
+  vehicles        Vehicle[]
+  invoices        SalesInvoice[]
+  auditLogs       AuditLog[]
+  apiLogs         ApiTransactionLog[]
+
+  @@map("companies")
+}
+
+model Customer {
+  id             Int            @id @default(autoincrement())
+  companyId      Int
+  company        Company        @relation(fields: [companyId], references: [id])
+  name           String
+  address        String
+  city           String
+  pincode        String
+  gstin          String?
+  stateName      String
+  stateCode      String
+  mobile         String?
+  email          String?
+  openingBalance Decimal        @default(0) @db.Decimal(18, 2)
+  creditLimit    Decimal        @default(0) @db.Decimal(18, 2)
+  paymentTerms   String?
+  active         Boolean        @default(true)
+  invoices       SalesInvoice[]
+
+  @@index([companyId, name])
+  @@map("customers")
+}
+
+model HsnCode {
+  id          Int       @id @default(autoincrement())
+  companyId   Int
+  company     Company   @relation(fields: [companyId], references: [id])
+  code        String
+  description String
+  gstRate     Decimal   @db.Decimal(5, 2)
+  products    Product[]
+
+  @@unique([companyId, code])
+  @@map("hsn_codes")
+}
+
+model Product {
+  id        Int                @id @default(autoincrement())
+  companyId Int
+  company   Company            @relation(fields: [companyId], references: [id])
+  hsnId     Int?
+  hsn       HsnCode?           @relation(fields: [hsnId], references: [id])
+  name      String
+  unit      String             @default("QTL")
+  gstRate   Decimal            @db.Decimal(5, 2)
+  active    Boolean            @default(true)
+  items     SalesInvoiceItem[]
+
+  @@index([companyId, name])
+  @@map("products")
+}
+
+model Transporter {
+  id             Int       @id @default(autoincrement())
+  companyId      Int
+  company        Company   @relation(fields: [companyId], references: [id])
+  name           String
+  gstin          String?
+  transporterGstId String?
+  mobile         String?
+  active         Boolean   @default(true)
+  vehicles       Vehicle[]
+
+  @@index([companyId])
+  @@map("transporters")
+}
+
+model Vehicle {
+  id            Int          @id @default(autoincrement())
+  companyId     Int
+  company       Company      @relation(fields: [companyId], references: [id])
+  transporterId Int?
+  transporter   Transporter? @relation(fields: [transporterId], references: [id])
+  vehicleNo     String
+  active        Boolean      @default(true)
+
+  @@unique([companyId, vehicleNo])
+  @@map("vehicles")
+}
+
+model SalesInvoice {
+  id              Int                @id @default(autoincrement())
+  companyId       Int
+  company         Company            @relation(fields: [companyId], references: [id])
+  customerId      Int
+  customer        Customer           @relation(fields: [customerId], references: [id])
+  number          String
+  financialYear   String
+  invoiceDate     DateTime           @db.Date
+  placeOfSupply   String
+  status          InvoiceStatus      @default(DRAFT)
+  buyerName       String
+  buyerGstin      String?
+  buyerAddress    String
+  buyerStateCode  String
+  taxable         Decimal            @default(0) @db.Decimal(18, 2)
+  cgst            Decimal            @default(0) @db.Decimal(18, 2)
+  sgst            Decimal            @default(0) @db.Decimal(18, 2)
+  igst            Decimal            @default(0) @db.Decimal(18, 2)
+  roundOff        Decimal            @default(0) @db.Decimal(18, 2)
+  total           Decimal            @default(0) @db.Decimal(18, 2)
+  buyerCity       String             @default("")
+  buyerPincode    String             @default("")
+  sellerStateCode String             @default("")
+  shortageMode    String             @default("QUANTITY")
+  bardanaMode     String             @default("NONE")
+  bardanaRate     Decimal            @default(0) @db.Decimal(18, 2)
+  transporterName String?
+  transporterGstId String?
+  vehicleNo       String?
+  transportMode   String             @default("ROAD")
+  distanceKm      Int?
+  lrNumber        String?
+  einvoiceState   String?
+  ewayState       String?
+  items           SalesInvoiceItem[]
+  einvoices       EinvoiceRecord[]
+  ewayBills       EwayBillRecord[]
+  documents       InvoiceDocument[]
+
+  @@unique([companyId, financialYear, number])
+  @@index([companyId, invoiceDate])
+  @@map("sales_invoices")
+}
+
+model SalesInvoiceItem {
+  id          Int          @id @default(autoincrement())
+  invoiceId   Int
+  invoice     SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  productId   Int?
+  product     Product?     @relation(fields: [productId], references: [id])
+  description String
+  hsnCode     String
+  bags          Decimal      @default(0) @db.Decimal(12, 2)
+  quantity      Decimal      @db.Decimal(18, 3)
+  quantityUnit  String       @default("QTL")
+  billedQty     Decimal      @default(0) @db.Decimal(18, 3)
+  rateUnit      String       @default("QTL")
+  shortageQty   Decimal      @default(0) @db.Decimal(18, 3)
+  shortageAmount Decimal     @default(0) @db.Decimal(18, 2)
+  bardana       Decimal      @default(0) @db.Decimal(18, 2)
+  unit          String
+  rate          Decimal      @db.Decimal(18, 2)
+  discount    Decimal      @default(0) @db.Decimal(18, 2)
+  taxable     Decimal      @db.Decimal(18, 2)
+  gstRate     Decimal      @db.Decimal(5, 2)
+  cgst        Decimal      @default(0) @db.Decimal(18, 2)
+  sgst        Decimal      @default(0) @db.Decimal(18, 2)
+  igst        Decimal      @default(0) @db.Decimal(18, 2)
+  lineTotal   Decimal      @db.Decimal(18, 2)
+
+  @@index([invoiceId])
+  @@map("sales_invoice_items")
+}
+
+model EinvoiceRecord {
+  id             Int          @id @default(autoincrement())
+  invoiceId      Int
+  invoice        SalesInvoice @relation(fields: [invoiceId], references: [id])
+  status         String
+  irn            String?
+  ackNo          String?
+  ackDate        String?
+  signedQr       String?      @db.Text
+  signedInvoice  String?      @db.Text
+  portalMessage  String?
+  requestJson    Json?
+  responseJson   Json?
+  irnInvented    Boolean      @default(false)
+  mode           String       @default("MOCK")
+  requestHash    String?
+  createdAt      DateTime     @default(now())
+
+  @@index([invoiceId])
+  @@map("einvoice_records")
+}
+
+model EwayBillRecord {
+  id            Int          @id @default(autoincrement())
+  invoiceId     Int
+  invoice       SalesInvoice @relation(fields: [invoiceId], references: [id])
+  status        String
+  ewayNo        String?
+  generatedAt   String?
+  validUpto     String?
+  vehicleNo     String?
+  distanceKm    Int?
+  portalMessage String?
+  requestJson   Json?
+  responseJson  Json?
+  invented      Boolean      @default(false)
+  mode          String       @default("MOCK")
+  transportMode String?
+  transporterName String?
+  lrNumber      String?
+  createdAt     DateTime     @default(now())
+
+  @@index([invoiceId])
+  @@map("eway_bill_records")
+}
+
+model ApiTransactionLog {
+  id         Int      @id @default(autoincrement())
+  companyId  Int
+  company    Company  @relation(fields: [companyId], references: [id])
+  kind       String
+  url        String?
+  statusCode Int?
+  success    Boolean
+  message    String?
+  createdAt  DateTime @default(now())
+
+  @@index([companyId, createdAt])
+  @@map("api_transaction_logs")
+}
+
+model InvoiceDocument {
+  id        Int          @id @default(autoincrement())
+  invoiceId Int
+  invoice   SalesInvoice @relation(fields: [invoiceId], references: [id])
+  kind      String
+  fileName  String
+  content   Bytes?
+  createdAt DateTime     @default(now())
+
+  @@index([invoiceId])
+  @@map("invoice_documents")
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  companyId Int
+  company   Company  @relation(fields: [companyId], references: [id])
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  Int?
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([companyId, createdAt])
+  @@map("audit_logs")
+}

@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: galla
+      POSTGRES_USER: galla
+      POSTGRES_PASSWORD: galla
+    ports:
+      - "5432:5432"
+    volumes:
+      - galla_pg:/var/lib/postgresql/data
+
+volumes:
+  galla_pg:

@@ -1,0 +1,19 @@
+{
+  "name": "galla-bill",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "erp": "node src/erp/server.js",
+    "check": "node src/selfcheck.js",
+    "check:erp": "node src/erp/check.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4"
+  }
+}
