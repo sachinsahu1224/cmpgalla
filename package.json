@@ -7,7 +7,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node serve-web.js",
+    "postinstall": "node scripts/render-web.js",
     "erp": "node src/erp/server.js",
     "check": "node src/selfcheck.js",
     "check:erp": "node src/erp/check.js"
